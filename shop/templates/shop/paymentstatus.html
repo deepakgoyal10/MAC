@@ -1,0 +1,112 @@
+{% extends 'shop/basic.html' %}
+
+
+
+{% block title %}  {% endblock %}
+{% block body %} <div class="container">
+	{{response}}
+	<div class="col my-4">
+		<h2>  Payment status regarding your order id {{response.ORDERID}}</h2>
+		{% if response.RESPCODE == '01'%}
+			ORDER SUCCESS 
+			{% else%}
+			 ORDER FAILED.
+			{% endif % } 
+	}
+
+</div>
+</div>
+
+
+
+
+
+ {% endblock %}
+
+
+
+ {% block js %}
+<script>
+$('#trackerForm').submit(function(event){
+
+	$('#items').empty();
+	var formData = {
+		'orderId': $('input[name=orderId]').val(),
+		'email' : $('input[name=email]').val(),
+		'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+
+	};
+		$.ajax({
+			type: 'POST',
+			url: '/shop/tracker/',
+			data: formData,
+			encode: true
+
+		})
+		.done(function(data){
+			console.log(data)
+			data = JSON.parse(data);
+			updates = data[0]
+				if (updates.length > 0 & updates != {}) {
+
+					for (i = 0; i < updates.length; i++) {
+
+				    	let text = updates[i]['text'];
+				    	let time = updates[i]['time'];
+				    	time = ((time.toString().split('')).slice(0,16)).join('');
+				    	mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+				    	    	${text}
+				    	    		<span class="badge bg-primary rounded-pill">${time}</span>
+				    	  		</li>`
+
+
+				    	$('#items').append(mystr);
+					}
+
+			}	else {
+			mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+		    	    	Sorry, We are not able to fetch shippment details. Please enter the correct Order Id and Email.
+		    	  		</li>`
+		    	  		$('#items').append(mystr);
+		}  
+
+// fill in the order details
+	cart = JSON.parse(data[1]);
+	console.log(cart);
+			if (updates.length > 0 & updates != {}) {
+				for (item in cart){
+
+			      let qty = cart[item][0];
+			    	let name = cart[item][1];
+			      let price = cart[item][2];
+			      
+			    	mystr = `<li class="list-group-item d-flex justify-content-between align-items-center col-sm-12">
+			    	    	
+			          <span class="col-sm-6"> ${name} </span>
+			          <span class="col-sm-5">${qty} </span>
+			          <span class="col-sm-1">${price}</span>
+			    	  		</li>`	
+			            
+
+			    	$('#citems').append(mystr);
+			    }
+					} else {
+
+								mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+		    	    	Sorry, We are not able to fetch shippment details. Please enter the correct Order Id and Email.
+		    	  		</li>`
+		    	  		$('#citems').append(mystr);
+		}  		
+
+		});
+		event.preventDefault();
+
+})
+</script>	
+
+
+
+
+
+
+  {% endblock %}

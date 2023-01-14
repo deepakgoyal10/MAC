@@ -1,0 +1,43 @@
+{% extends 'shop/basic.html' %}
+
+{% block activeContact %} active {% endblock %}
+
+{% block title %} Contact Us {% endblock %}
+{% block body %} 
+
+<div class="container my-3">
+	<h3>Contact Us regarding any query</h3>
+<form class="row g-3" method="post" action="/shop/contact/"> {% csrf_token %}
+  <div class="col-md-8">
+	    <label for="inputName" class="form-label">Name</label>
+	    <input type="Name" class="form-control" id="inputNamne" name="name" placeholder="Enter Your name">
+  </div>
+  <div class="col-md-8">
+	    <label for="inputEmail4" class="form-label">Email</label>
+	    <input type="email" class="form-control" id="inputEmail4" name="email" placeholder="example123@.com">
+  </div>
+  <div class="col-8">
+	    <label for="inputphone" class="form-label">Your Phone number(with country code)</label>
+	    <input type="tel" class="form-control" id="inputphone" name="phone" placeholder="Enter your Phone number">
+  </div>
+
+ 	<div class="col-md-8" >
+	 	<label for="floatingTextarea" class="form-label">Description</label>
+	  	<textarea type="tel" class="form-control" name="desc" placeholder="Enter your query" id="inputdecs"></textarea>
+	</div>
+  <div class="col-12">
+  	<button  type="submit" class="btn btn-success">Submit</button>
+  </div>
+</form> 
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+{% if thank %}
+alert('Thanks for contacting us. We will get back to you soon.')
+localStorage.clear()
+document.location = "/shop/contact"
+{% endif %}
+</script>
+{% endblock %}

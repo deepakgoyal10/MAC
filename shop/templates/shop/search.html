@@ -1,0 +1,146 @@
+{% extends 'shop/basic.html' %}
+{% block title %} MyAwesomeCart- search {% endblock%}
+
+
+    {% block css %}
+        .col-md-3 {
+            display: inline-block;
+            margin-left: -4px;
+        }
+
+        .carousel-indicators .active {
+            background-color: blue;
+        }
+
+
+        .col-md-3 img {
+            max-width: 94%;
+            height: 226px;
+        }
+
+        body .carousel-control-indicator li {
+            background-color: blue;
+        }
+
+        body .carousel-indicators {
+            bottom: -40px;
+        }
+
+        .carousel-indicators
+        [data-bs-target] {
+            padding: 1px;
+            background-color: blue;
+        }
+        body .carousel-control-prev-icon,
+        body .carousel-control-next-icon {
+        background-color: blue;
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+        top: auto;
+        bottom: auto;
+        padding-top: 168px;
+        }
+
+        body .no-padding {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .carousel-control-prev-icon {
+            background: rgb(0, 0, 0) no-repeat center center;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3e%3cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3e%3c/svg%3e");
+        }
+
+        .carousel-control-next-icon {
+            background: black no-repeat center center;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3e%3cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3e%3c/svg%3e");
+
+        }
+
+    {% endblock %}
+
+
+{% block activeHome %} active {% endblock %}
+
+{% block body %}
+
+{% load static %}
+
+
+    <div class="container">
+<!--        Slideshow starts here-->
+        {% for products, range, nSlides in allProds %}
+        <h1 class="my-4"> Sale on {{products.0.category}} - Recommended items </h1>
+        <div class="row">
+        <div id="demo{{forloop.counter}}" class="carousel slide my-3" data-bs-ride="carousel">
+            <ul class="carousel-indicators">
+<!--                <li data-bs-target="#demo" data-bs-slide-to="0" class="active"></li>-->
+
+                 {% for i in range %}
+                <li data-bs-target="#demo{{forloop.parentloop.counter}}" data-bs-slide-to="{{i}}" class="active"></li>
+                {% endfor %}
+            </ul>
+
+
+
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+
+                    {% for i in products %}
+                    <div class="col-xs-3 col-sm-3 col-md-3">
+                        <div class="card align-items-center" style="width: 18rem;">
+                            <img src='/media/{{i.image}}' class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title" id="namepr{{i.id}}">{{i.product_name}}</h5>
+                                <p class="card-text">{{i.desc|slice:"0:35"}}...</p>
+                                <h4 class="card-title" id="pricepr{{i.id}}">₹{{i.price}}</h4>
+                                <span id="divpr{{i.id}}" class="divpr">
+                                 <button id="pr{{i.id}}" class="btn btn-primary cart">Add To Cart</button>
+                                 </span>
+                                <a href="/shop/productView/{{i.id}}"><button id="qv{{i.id}}" class="btn btn-primary cart">QuickView</button></a>
+                            </div>
+                        </div>
+                    </div>
+                    {% if forloop.counter|divisibleby:4 and not forloop.last %}
+                </div>
+                <div class="carousel-item ">
+
+                    {% endif %}
+
+
+                    {% endfor %}
+                </div>
+
+        </div>
+        </div>
+
+        <button  class="carousel-control-prev " type="button" data-bs-target="#demo{{forloop.counter}}" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#demo{{forloop.counter}}" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+
+
+
+ {% block js %}
+<script>
+    
+
+{% if msg|length != 0 %}
+alert('{{msg}}');
+window.location.href = '/'
+
+{% endif %}
+</script>
+
+  {% endblock %}

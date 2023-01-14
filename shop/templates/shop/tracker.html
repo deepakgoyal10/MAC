@@ -1,0 +1,146 @@
+{% extends 'shop/basic.html' %}
+
+{% block activeTracker %} active {% endblock %}
+
+{% block title %} MyAwesomeCart- tracker {% endblock%}
+{% block body %} 
+<div class="container">
+	<div class="col my-4">
+		<h2>  My Awesome Cart Tracker - Enter your order Id and Email Address to track your order</h2>
+
+	<form class="row g-3" method="post" action="#" id="trackerForm"> {% csrf_token %}
+  	<div class="col-md-6">
+    	<label for="inputorderid" class="form-label">Order Id</label>
+    	<input type="text" class="form-control" id="orderId" name="orderId" placeholder="Enter Your Order ID">
+  </div>
+  <div class="col-md-6">
+    <label for="inputEmail4" class="form-label">Email</label>
+    <input type="email" class="form-control" id="email" name="email" placeholder="example123@.com">
+  </div>
+
+  <div class="col-12 my-4">
+    <button type="submit" class="btn btn-primary">Track Order</button>
+  </div>
+    
+	</div>
+	<div class="col my-4">
+		<h2> Your Order Status </h2>	
+			<div>
+		<ul class="list-group my-4" id="items">
+			Enter Your Order Id and Email and click on Track Order to find shippment details!
+			
+		</ul>
+
+		<h2> Your Order Status </h2>	
+			<div>
+
+		<div class="list-group my-4" id="citems">
+			<div class="row col-sm-12">
+        <div class="d-flex ">
+        <div class="col-sm-6"> <b>Your Products</b> </div>
+        <div class="col-sm-5"><b>Quantity</b></div>
+        <div class="col-sm-1"><b>Amount</b></div>
+        </div>
+      </div>	
+			<ul>
+
+			</ul>
+
+		</div>
+
+		</div>
+		</div>
+	
+		
+</div>
+
+
+
+
+
+ {% endblock %}
+
+
+
+ {% block js %}
+<script>
+$('#trackerForm').submit(function(event){
+
+	$('#items').empty();
+	var formData = {
+		'orderId': $('input[name=orderId]').val(),
+		'email' : $('input[name=email]').val(),
+		'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+
+	};
+		$.ajax({
+			type: 'POST',
+			url: '/shop/tracker/',
+			data: formData,
+			encode: true
+
+		})
+		.done(function(data){
+			$('#citems').empty();
+			console.log(data)
+			data = JSON.parse(data);
+			
+				if ( data['status'] == 'success') {
+					updates = data['updates']
+
+					for (i = 0; i < updates.length; i++) {
+
+				    	let text = updates[i]['text'];
+				    	let time = updates[i]['time'];
+				    	time = ((time.toString().split('')).slice(0,16)).join('');
+				    	mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+				    	    	${text}
+				    	    		<span class="badge bg-primary rounded-pill">${time}</span>
+				    	  		</li>`
+
+
+				    	$('#items').append(mystr);
+					}
+					// fill in the order details
+	cart = JSON.parse(data["itemsJson"]);
+	console.log(cart);
+			if (updates.length > 0 & updates != {}) {
+				for (item in cart){
+
+			      let qty = cart[item][0];
+			    	let name = cart[item][1];
+			      let price = cart[item][2];
+			      
+			    	mystr = `<li class="list-group-item d-flex justify-content-between align-items-center col-sm-12">
+			    	    	
+			          <span class="col-sm-6"> ${name} </span>
+			          <span class="col-sm-5">${qty} </span>
+			          <span class="col-sm-1">${price}</span>
+			    	  		</li>`	
+			            
+
+			    	$('#citems').append(mystr);
+			    }
+					} 
+
+			}	else {
+			mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+		    	    	Sorry, We are not able to fetch shippment details. Please enter the correct Order Id and Email.
+		    	  		</li>`
+		    	  		$('#items').append(mystr);
+		}  
+
+
+
+		});
+		event.preventDefault();
+
+})
+</script>	
+
+
+
+
+
+
+  {% endblock %}

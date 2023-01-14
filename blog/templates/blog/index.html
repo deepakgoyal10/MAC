@@ -1,0 +1,84 @@
+{% extends 'blog/basic.html' %}
+{% block title %}  MyAwesomeCart- blog  {% endblock %}
+
+{% block activeblog %} active {% endblock %}
+{% block css %}
+
+         {% endblock %}
+{% block body %} 
+    
+    <div class="container mt-3 ">
+      <div class="container">
+        <div class="row">
+          <div id="demo{{forloop.counter}}" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              {% for item in blogtitle %}
+                <div class="carousel-item active">
+                  {% for i in item %}
+                  <div class="p-4 p-md-5 mb-4 rounded text-bg-dark">
+                    <div class="col-md-6 px-0 mx-5">
+                      <h1 class="display-4 fst-italic mx-5 ">{{i}}</h1>
+                        <p class="lead my-3 mx-5">{{i.chead0|slice:"0:135"}}...</p>
+                        <p class="lead mb-0 mx-5"><a href="blogpost/{{i.post_id}}" class="text-white fw-bold">Continue reading...</a></p>
+                    </div>
+                  </div>
+                  {% if not forloop.last %}
+                </div>
+            <div class="carousel-item ">
+                  {% endif %}
+                  {% endfor %}
+            </div>
+              {% endfor %}
+            </div>
+          
+
+          <button class="carousel-control-prev" type="button"  data-bs-target="#demo{{forloop.counter}}" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#demo{{forloop.counter}}" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+          </div>
+        </div>
+      </div>
+       
+        
+      <!-- <div class="row col-sm-12"> -->
+      <!-- slide start here -->
+      
+    <div class="row">
+      {% for item in allBlog %}
+              <h1 class="my-4"> {{item.0.category}} Related blog</h1>
+        {% for i in item %}
+          <div class="col-sm-6">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+              <div class="col p-4 d-flex flex-column position-static">
+                <strong class="d-inline-block mb-2 text-primary">{{i.category}}</strong>
+                <h3 class="mb-0">{{i}}</h3>
+                <div class="mb-1 text-muted fst-italic">{{i.pub_date}}</div>
+                <h5 class="card-text mb-auto ">{{i.head0|slice:"0:70"}}</h5>
+                <p class="card-text mb-auto fst-italic">{{i.chead0|slice:"0:95"}}...</p>
+                <a href="blogpost/{{i.post_id}}" class="stretched-link">Continue reading</a>
+              </div>
+              <div class="col-auto d-none d-lg-block">
+                <img class="bd-placeholder-img" width="200" height="250" src='/media/{{i.thumbnail}}' class="card-img-top" alt="...">
+              </div>
+            </div>
+          </div>
+          {% endfor%}
+          {% endfor%}
+      </div>
+      
+    </div>
+
+   
+    {% endblock %}
+
+    {% block js %}
+
+
+
+
+     {% endblock %}
